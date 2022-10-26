@@ -1,16 +1,21 @@
-stages {
-  stage('Git Checkout') {
-    steps {
-      checkout scm
-      }
+pipeline {
+  agent {
+    label 'node'
   }
+  stages {
+    stage('Git Checkout') {
+      steps {
+        checkout scm
+      }
+    }
   
-  stage{'Build Docker Image') {
-    parallel {
-      stage('Build Docker Image') {
-        steps {
-        sh 'cd vote && sudo docker build -t ecr/vote:${BUILD_NUMBER}'
-        sh 'sudo docker push ecr/vote:${BUILD_NUMBER}'
+    stage{'Build Docker Image') {
+      parallel {
+        stage('Build Docker Image') {
+          steps {
+            sh 'cd vote && sudo docker build -t ecr/vote:${BUILD_NUMBER}'
+            sh 'sudo docker push ecr/vote:${BUILD_NUMBER}'
+          }
         }
       }
     }
